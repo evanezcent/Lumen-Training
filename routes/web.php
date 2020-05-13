@@ -11,13 +11,15 @@
 |
 */
 $var = "/learn";
-$router->get('/', function () use ($router) {
+$router->get('/', ['middleware'=>'auth', function () use ($router) {
     return $router->app->version();
-});
+}]);
 
-$router->get($var.'/get-all-board', ['middleware'=> 'auth', 'BoardController@index']);
-$router->get($var.'/get-board/{id}', 'BoardController@show');
+$router->get($var.'/get-all-board', 'BoardController@index');
 $router->post($var.'/add-board', 'BoardController@store');
+$router->get($var.'/get-board/{id}', 'BoardController@show');
+$router->put($var.'/update-board/{boardID}', 'BoardController@update');
+$router->delete($var.'/delete-board/{id}', 'BoardController@delete');
 
 $router->post($var.'/login', 'UserController@login');
 $router->post($var.'/logout', 'UserController@logout');
