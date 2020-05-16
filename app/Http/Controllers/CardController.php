@@ -19,12 +19,12 @@ class CardController extends BaseController
     {
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user == $board->username) {
             $data = DB::table('card')
-                ->join('list_board', 'list_board.list_id', '=', 'card.list_id')
-                ->where('list_id', $listID)
+                ->join('list_board', 'list_board.id', '=', 'card.list_id')
+                ->where('list_board.id', $listID)
                 ->get();
             if ($data) {
                 return response()->json(['status' => 'success', 'data' => $data], 200);
@@ -64,13 +64,13 @@ class CardController extends BaseController
         $this->validate($req, ['name' => 'required']);
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
         }
 
-        $list = $Board->findData('list_board', ['list_id' => $listID]);
+        $list = $Board->findData('list_board', ['id' => $listID]);
         if ($list) {
             $text = "";
             if ($req->data) {
@@ -79,7 +79,7 @@ class CardController extends BaseController
             $new = array(
                 'card_id' => "C-" . uniqid(),
                 'list_id' => $listID,
-                'nama' => $req->nama,
+                'name' => $req->name,
                 'data' => $text,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
@@ -97,32 +97,32 @@ class CardController extends BaseController
         $this->validate($req, ['name' => 'required']);
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
         }
-        $list = $Board->findData('list_board', ['list_id' => $listID]);
+        $list = $Board->findData('list_board', ['id' => $listID]);
         if ($list) {
             $text = "";
             if ($req->data) {
                 $text = $req->data;
             }
             $new = array(
-                'list_id' => $req->list_id,
+                'list_id' => $listID,
                 'name' => $req->name,
                 'data' => $text,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             );
-            DB::table('card')->where(['card_id' => $cardID])->update($new);
+            DB::table('card')->where(['id' => $cardID])->update($new);
 
-            $data = DB::table('card')
-                ->join('board', 'board.board_id', '=', 'list_board.board_id')
-                ->join('list_board', 'list_board.list_id', '=', 'card.list_id')
-                ->where('list_board.board_id', $boardID)
-                ->get();
-            return response()->json(['status' => 'success', 'data' => $data], 200);
+            // $data = DB::table('card')
+            //     ->join('board', 'board.id', '=', 'list_board.board_id')
+            //     ->join('list_board', 'list_board.id', '=', 'card.list_id')
+            //     ->where('list_board.board_id', $boardID)
+            //     ->get();
+            return response()->json(['status' => 'success'], 200);
         }
     }
 
@@ -154,18 +154,23 @@ class CardController extends BaseController
     {
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
-        }
-        DB::table('list_board')->where(['list_id' => $listID, 'card_id' => $cardID])->delete();
+        } 
 
-        $data = DB::table('card')
-            ->join('board', 'board.board_id', '=', 'list_board.board_id')
-            ->join('list_board', 'list_board.list_id', '=', 'card.list_id')
-            ->where('list_board.board_id', $boardID)
-            ->get();
-        return response()->json(['status' => 'success', 'data' => $data], 200);
+        $list = $Board->findData('list_board', ['id' => $listID]);  
+        if($boardID != $list->board_id){
+            return response()->json(['status' => 'failed', 'message' => "Not found"], 404);
+        }
+        DB::table('card')->where(['list_id' => $listID, 'id' => $cardID])->delete();
+
+        // $data = DB::table('card')
+        //     ->join('board', 'board.board_id', '=', 'list_board.board_id')
+        //     ->join('list_board', 'list_board.list_id', '=', 'card.list_id')
+        //     ->where('list_board.board_id', $boardID)
+        //     ->get();
+        return response()->json(['status' => 'success'], 200);
     }
 }

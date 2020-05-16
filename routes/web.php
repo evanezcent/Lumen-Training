@@ -34,7 +34,7 @@ $router->delete($var.'/board/{boardID}/delete-list/{listID}', 'ListController@de
 
 $router->get($var.'/board/{boardID}/list/{listID}/card', 'CardController@getListCards');
 // $router->get($var.'/board/{boardID}/list/{listID}/card', 'CardController@getCard');
-$router->post($var.'/add-list/{boardID}/card', 'CardController@addCard');
+$router->post($var.'/board/{boardID}/list/{listID}/card', 'CardController@addCard');
 $router->put($var.'/board/{boardID}/list/{listID}/update-card/{cardID}', 'CardController@updateCard');
-$router->put($var.'/board/{boardID}/list/{listID}/update-card/{cardID}', 'CardController@updateBoardCard');
-$router->delete($var.'/board/{boardID}/list/{listID}/update-card/{cardID}', 'CardController@deleteCard');
+// $router->put($var.'/board/{boardID}/list/{listID}/update-card/{cardID}', 'CardController@updateBoardCard');
+$router->delete($var.'/board/{boardID}/list/{listID}/delete-card/{cardID}', 'CardController@deleteCard');
