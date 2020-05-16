@@ -30,7 +30,7 @@ class BoardController extends BaseController
         $where = array(
             'id' => $id
         );
-        $board = $Board->findBoard($where);
+        $board = $Board->findData('table', $where);
         if ($board->username == Auth::user()->username) {
             $data =  DB::table('board')
                 ->where($where)
@@ -65,7 +65,7 @@ class BoardController extends BaseController
         $where = array(
             'id' => $boardID,
         );
-        $board = $Board->findBoard($where);
+        $board = $Board->findData('board',$where);
         if ($board->username == Auth::user()->username) {
             $new = array(
                 'board_name' => $req->board_name
@@ -75,7 +75,7 @@ class BoardController extends BaseController
                 'username' => Auth::user()->username
             );
             DB::table('board')->where($where2)->update($new);
-            $board = $Board->findBoard($where);
+            $board = $Board->findData('table',$where);
             return response()->json(['message' => 'success', 'board' => $board], 200);
         } else {
             return response()->json(['message' => 'Forbidden access'], 403);
@@ -88,7 +88,7 @@ class BoardController extends BaseController
         $where = array(
             'id' => $id,
         );
-        $board = $Board->findBoard($where);
+        $board = $Board->findData('table',$where);
         if ($board->username != Auth::user()->username) {
             return response()->json(['message' => 'Forbidden access !'], 403);
         }else{

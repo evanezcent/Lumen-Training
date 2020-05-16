@@ -12,9 +12,9 @@ class Board extends Model{
 
     protected $fillable = [];
 
-    public function findBoard($where)
+    public function findData($table, $where)
     {
-        return DB::table('board')
+        return DB::table($table)
             ->where($where)
             ->first();
     }
