@@ -27,7 +27,7 @@ $router->post($var.'/register', 'UserController@register');
 
 $router->get($var.'/board/{boardID}/list', 'ListController@getBoardsList');
 $router->get($var.'/board/{boardID}/list/{listID}', 'ListController@getList');
-$router->post($var.'/add-list/{boardID}', 'ListController@addList');
+$router->post($var.'/board/{boardID}/add-list', 'ListController@addList');
 $router->put($var.'/board/{boardID}/update-list/{listID}', 'ListController@updateList');
 $router->put($var.'/board/{boardID}/update-lists/{listID}', 'ListController@updateBoardList');
 $router->delete($var.'/board/{boardID}/delete-list/{listID}', 'ListController@deleteList');

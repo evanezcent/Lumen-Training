@@ -30,7 +30,7 @@ class BoardController extends BaseController
         $where = array(
             'id' => $id
         );
-        $board = $Board->findData('table', $where);
+        $board = $Board->findData('board', $where);
         if ($board->username == Auth::user()->username) {
             $data =  DB::table('board')
                 ->where($where)

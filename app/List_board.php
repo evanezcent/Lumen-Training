@@ -10,11 +10,11 @@ use Laravel\Lumen\Auth\Authorizable;
 class List_board extends Model{
     // use Authenticatable, Authorizable;
 
-    protected $fillable = ['data', 'board_id'];
+    protected $fillable = ['data', 'board_id', 'list_id'];
 
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 }

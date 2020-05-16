@@ -19,12 +19,12 @@ class ListController extends BaseController
     {
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user == $board->username) {
             $data = DB::table('list_board')
-                ->join('board', 'list_board.board_id', '=', 'board.board_id')
-                ->where('list_board.board_id', $boardID)
+                ->join('board', 'list_board.board_id', '=', 'board.id')
+                ->where('board.id', $boardID)
                 ->get();
             return response()->json(['status' => 'success', 'data' => $data], 200);
         } else {
@@ -36,11 +36,11 @@ class ListController extends BaseController
     {
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
         if ($user == $board->username) {
             $where = array(
                 'board_id' => $boardID,
-                'list_id' => $listID
+                'id' => $listID
             );
             $data = DB::table('list_board')
                 ->where($where)
@@ -56,8 +56,8 @@ class ListController extends BaseController
         $this->validate($req, ['data' => 'required']);
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
-
+        $board = $Board->findData('board', ['id' => $boardID]);
+    
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
         }
@@ -78,7 +78,7 @@ class ListController extends BaseController
         $this->validate($req, ['data' => 'required']);
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
@@ -88,12 +88,12 @@ class ListController extends BaseController
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         );
-        DB::table('list_board')->where(['list_id' => $listID])->update($new);
+        DB::table('list_board')->where(['id' => $listID])->update($new);
 
-        $data = DB::table('list_board')
-            ->where('board_id', $boardID)
-            ->get();
-        return response()->json(['status' => 'success', 'data' => $data], 200);
+        // $data = DB::table('list_board')
+        //     ->where('board_id', $boardID)
+        //     ->get();
+        return response()->json(['status' => 'success'], 200);
     }
 
     // Maybe it will used to update list position in board
@@ -124,16 +124,16 @@ class ListController extends BaseController
     {
         $Board = new Board();
         $user =  Auth::user()->username;
-        $board = $Board->findData('board', ['board_id' => $boardID]);
+        $board = $Board->findData('board', ['id' => $boardID]);
 
         if ($user != $board->username) {
             return response()->json(['status' => 'failed', 'message' => "Unauthorized"], 401);
         }
-        DB::table('list_board')->where(['list_id' => $listID])->delete();
+        DB::table('list_board')->where(['id' => $listID])->delete();
 
-        $data = DB::table('board')
-            ->where('board_id', $boardID)
-            ->get();
-        return response()->json(['status' => 'success', 'data' => $data], 200);
+        // $data = DB::table('board')
+        //     ->where('board_id', $boardID)
+        //     ->get();
+        return response()->json(['status' => 'success'], 200);
     }
 }
